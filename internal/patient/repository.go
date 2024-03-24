@@ -1,8 +1,11 @@
-package repository
+package patient
 
 import (
-	"\DesafioFinal\internal\domain"
-	
+	"/DesafioFinal/internal/domain"
+	"/DesafioFinal/pkg/store"
+
+	"errors"
+	"net/url"
 )
 
 type Repository interface {
@@ -17,5 +20,18 @@ type Repository interface {
 }
 
 type repository struct{
-	storage StoreInterface 
+	storage store.StoreInterface 
+}
+
+//NewRepository crea un nuevo repositorio
+func NewRepository(storage store.StoreInterface) Repository{
+	return &repository(storage)
+}
+
+func (r *repository) GetByID(id int) (domain.Patient, error){
+	patient, err := r.storage.Read(id)
+	if err != nil {
+		return domain.Patient{}, errors.New("patient not found")
+	}
+	return patient, nil
 }

@@ -29,6 +29,7 @@ func main() {
 		patients.POST("", patientHandler.Post())
 		patients.GET("", patientHandler.GetAll())
 		patients.GET(":id", patientHandler.GetByID())
+		patients.PUT(":id", patientHandler.Put())
 	}
 
 	dentists := r.Group("/dentists")

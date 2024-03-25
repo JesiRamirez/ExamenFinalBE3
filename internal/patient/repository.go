@@ -10,6 +10,9 @@ type Repository interface {
 	Create(p domain.Patient) (domain.Patient, error)
 	GetAll() []domain.Patient
 	GetByID(id int) (domain.Patient, error)
+	Update(id int, p domain.Patient) (domain.Patient, error)
+	Patch(id int, p domain.Patient) (domain.Patient, error)
+	Delete(id int) error
 }
 
 type repository struct {
@@ -54,4 +57,56 @@ func (r *repository) GetByID(id int) (domain.Patient, error) {
 	}
 	return domain.Patient{}, errors.New("patient not found")
 
+}
+
+//Update patient
+func (r *repository) Update(id int, p domain.Patient) (domain.Patient, error){
+	if !r.validateCodeValue(p.DNI){
+		return domain.Patient{}, errors.New("code value already exists")
+	}
+	update := false
+	for i, v := range r.list {
+		if v.Id == id {
+			p.Id = id
+			r.list[i] = p
+			update = true
+		}
+	}
+	if !update {
+		return domain.Patient{}, errors.New("patient not found")
+	}
+	return p, nil
+}
+
+//Patch patient
+func (r *repository) Patch(id int, p domain.Patient) (domain.Patient, error){
+	
+	update := false
+	for i, v := range r.list {
+		if v.Id == id {
+			p.Id = id
+			r.list[i] = p
+			update = true
+		}
+	}
+	if !update {
+		return domain.Patient{}, errors.New("patient not found")
+	}
+	return p, nil
+}
+
+//Delete patient
+func(r *repository) Delete(id int) error {
+	deleted := false
+	for i, v := range r.list {
+		if v.Id == id {
+			r.list = append(r.list[:i], r.list[i+1:]...)
+			deleted = true
+		}
+	}
+	if !deleted {
+		return errors.New("product not found")
+	}
+
+	return nil
 }

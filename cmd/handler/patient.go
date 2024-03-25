@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"strconv"
+
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/domain"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/patient"
 	"github.com/gin-gonic/gin"
@@ -36,10 +38,28 @@ func (h *patientHandler) Post() gin.HandlerFunc {
 	}
 }
 
-// GET al patients
+// GET all patients
 func (h *patientHandler) GetAll() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		patients, _ := h.s.GetAll()
 		c.JSON(200, patients)
+	}
+}
+
+// GET patient by ID
+func (h *patientHandler) GetByID() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		idParam := c.Param("id")
+		id, err := strconv.Atoi(idParam)
+		if err != nil {
+			c.JSON(400, gin.H{"error": "invalid id"})
+			return
+		}
+		patient, err := h.s.GetByID(id)
+		if err != nil {
+			c.JSON(404, gin.H{"error": "patient not found"})
+			return
+		}
+		c.JSON(200, patient)
 	}
 }

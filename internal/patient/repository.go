@@ -9,6 +9,7 @@ import (
 type Repository interface {
 	Create(p domain.Patient) (domain.Patient, error)
 	GetAll() []domain.Patient
+	GetByID(id int) (domain.Patient, error)
 }
 
 type repository struct {
@@ -42,4 +43,15 @@ func (r *repository) validateCodeValue(dni string) bool {
 // GetAll devuelve todos los productos
 func (r *repository) GetAll() []domain.Patient {
 	return r.list
+}
+
+// Get patient by ID
+func (r *repository) GetByID(id int) (domain.Patient, error) {
+	for _, patient := range r.list {
+		if patient.Id == id {
+			return patient, nil
+		}
+	}
+	return domain.Patient{}, errors.New("patient not found")
+
 }

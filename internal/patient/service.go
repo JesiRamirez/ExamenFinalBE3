@@ -7,6 +7,7 @@ import (
 type Service interface {
 	Create(p domain.Patient) (domain.Patient, error)
 	GetAll() ([]domain.Patient, error)
+	GetByID(id int) (domain.Patient, error)
 }
 
 type service struct {
@@ -31,4 +32,13 @@ func (s *service) Create(p domain.Patient) (domain.Patient, error) {
 func (s *service) GetAll() ([]domain.Patient, error) {
 	l := s.r.GetAll()
 	return l, nil
+}
+
+// Get patients by ID
+func (s *service) GetByID(id int) (domain.Patient, error) {
+	p, err := s.r.GetByID(id)
+	if err != nil {
+		return domain.Patient{}, err
+	}
+	return p, nil
 }

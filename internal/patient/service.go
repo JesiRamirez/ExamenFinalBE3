@@ -6,6 +6,7 @@ import (
 
 type Service interface {
 	Create(p domain.Patient) (domain.Patient, error)
+	GetAll() ([]domain.Patient, error)
 }
 
 type service struct {
@@ -24,4 +25,10 @@ func (s *service) Create(p domain.Patient) (domain.Patient, error) {
 		return domain.Patient{}, err
 	}
 	return p, nil
+}
+
+// Get all patients
+func (s *service) GetAll() ([]domain.Patient, error) {
+	l := s.r.GetAll()
+	return l, nil
 }

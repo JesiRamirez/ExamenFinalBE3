@@ -35,3 +35,11 @@ func (h *patientHandler) Post() gin.HandlerFunc {
 		ctx.JSON(201, p)
 	}
 }
+
+// GET al patients
+func (h *patientHandler) GetAll() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		patients, _ := h.s.GetAll()
+		c.JSON(200, patients)
+	}
+}

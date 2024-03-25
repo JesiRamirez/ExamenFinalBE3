@@ -8,6 +8,7 @@ import (
 
 type Repository interface {
 	Create(p domain.Patient) (domain.Patient, error)
+	GetAll() []domain.Patient
 }
 
 type repository struct {
@@ -36,4 +37,9 @@ func (r *repository) validateCodeValue(dni string) bool {
 		}
 	}
 	return true
+}
+
+// GetAll devuelve todos los productos
+func (r *repository) GetAll() []domain.Patient {
+	return r.list
 }

@@ -24,6 +24,8 @@ func main() {
 		patients.GET("", patientHandler.GetAll())
 		patients.GET(":id", patientHandler.GetByID())
 		patients.PUT(":id", patientHandler.Put())
+		patients.PATCH(":id", patientHandler.Patch())
+		patients.DELETE(":id", patientHandler.Delete())
 	}
 	r.Run(":8081")
 }

@@ -8,7 +8,7 @@ type Service interface {
 	Create(p domain.Patient) (domain.Patient, error)
 	GetAll() ([]domain.Patient, error)
 	GetByID(id int) (domain.Patient, error)
-	Update(id int, p domain.Patient)(domain.Patient, error)
+	Update(id int, p domain.Patient) (domain.Patient, error)
 	Patch(id int, p domain.Patient) (domain.Patient, error)
 	Delete(id int) error
 }
@@ -46,26 +46,26 @@ func (s *service) GetByID(id int) (domain.Patient, error) {
 	return p, nil
 }
 
-//Update patient
-func (s *service) Update(id int, u domain.Patient) (domain.Patient, error){
-	
+// Update patient
+func (s *service) Update(id int, u domain.Patient) (domain.Patient, error) {
+
 	p, err := s.r.GetByID(id)
-	if err != nil{
+	if err != nil {
 		return domain.Patient{}, err
 	}
-	if u.Lastname != ""{
+	if u.Lastname != "" {
 		p.Lastname = u.Lastname
 	}
-	if u.Name != ""{
+	if u.Name != "" {
 		p.Name = u.Name
 	}
-	if u.Address != ""{
+	if u.Address != "" {
 		p.Address = u.Address
 	}
 	if u.DNI != "" {
 		p.DNI = u.DNI
 	}
-		
+
 	p, err = s.r.Update(id, p)
 
 	if err != nil {
@@ -75,27 +75,26 @@ func (s *service) Update(id int, u domain.Patient) (domain.Patient, error){
 	return p, nil
 }
 
+// Update columns
+func (s *service) Patch(id int, u domain.Patient) (domain.Patient, error) {
 
-//Update columns
-func (s *service) Patch(id int, u domain.Patient) (domain.Patient, error){
-	
 	p, err := s.r.GetByID(id)
-	if err != nil{
+	if err != nil {
 		return domain.Patient{}, err
 	}
-	if u.Lastname != ""{
+	if u.Lastname != "" {
 		p.Lastname = u.Lastname
 	}
-	if u.Name != ""{
+	if u.Name != "" {
 		p.Name = u.Name
 	}
-	if u.Address != ""{
+	if u.Address != "" {
 		p.Address = u.Address
 	}
 	if u.DNI != "" {
 		p.DNI = u.DNI
 	}
-		
+
 	p, err = s.r.Patch(id, p)
 
 	if err != nil {
@@ -105,8 +104,8 @@ func (s *service) Patch(id int, u domain.Patient) (domain.Patient, error){
 	return p, nil
 }
 
-//Delete patient
-func (s *service) Delete(id int) error{
+// Delete patient
+func (s *service) Delete(id int) error {
 	err := s.r.Delete(id)
 	if err != nil {
 		return err

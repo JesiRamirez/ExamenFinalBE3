@@ -36,6 +36,9 @@ func main() {
 		dentists.POST("", dentistHandler.Post())
 		dentists.GET("", dentistHandler.GetAll())
 		dentists.GET(":id", dentistHandler.GetByID())
+		dentists.PUT(":id", dentistHandler.Put())
+		dentists.PATCH(":id", dentistHandler.Patch())
+		dentists.DELETE(":id", dentistHandler.Delete())
 	}
 
 	r.Run(":8081")

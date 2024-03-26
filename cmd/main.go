@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/bootcamp-go/ExamenFinalBE3.git/cmd/handler"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/appointment"
+	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/appointmentDNILicense"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/dentist"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/domain"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/patient"
@@ -13,6 +14,7 @@ func main() {
 	var patientsList = []domain.Patient{}
 	var dentistsList = []domain.Dentist{}
 	var appointmentList = []domain.Appointment{}
+	var appointmentsDNILicenseList = []domain.AppointmentDNILicense{}
 
 	repo := patient.NewRepository(patientsList)
 	service := patient.NewService(repo)
@@ -25,6 +27,10 @@ func main() {
 	repoAppointment := appointment.NewRepository(appointmentList)
 	serviceAppointment := appointment.NewService(repoAppointment)
 	appointmentHandler := handler.NewAppointmentHandler(serviceAppointment)
+
+	repoAppointmentDNILicense := appointmentDNILicense.NewRepository(appointmentsDNILicenseList)
+	serviceAppointmentDNILicense := appointmentDNILicense.NewService(repoAppointmentDNILicense)
+	appointmentDNILicenseHandler := handler.NewAppointmentDNILicenseHandler(serviceAppointmentDNILicense)
 
 	r := gin.Default()
 
@@ -49,6 +55,12 @@ func main() {
 		appointments.POST("", appointmentHandler.Post())
 		appointments.GET("", appointmentHandler.GetAll())
 		appointments.GET(":id", appointmentHandler.GetByID())
+	}
+
+	appointmentsDNILicense := r.Group("/appointmentsDNI")
+	{
+		appointmentsDNILicense.POST("", appointmentDNILicenseHandler.Post())
+		appointmentsDNILicense.GET(":id", appointmentDNILicenseHandler.GetByPatientDNI())
 	}
 
 	r.Run(":8081")

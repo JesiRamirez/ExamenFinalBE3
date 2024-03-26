@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"strconv"
 	"errors"
+	"strconv"
 
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/domain"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/patient"
@@ -65,10 +65,10 @@ func (h *patientHandler) GetByID() gin.HandlerFunc {
 	}
 }
 
-//UPDATE patient
-func(h *patientHandler) Put() gin.HandlerFunc{
-	return func(ctx *gin.Context){
-		
+// UPDATE patient
+func (h *patientHandler) Put() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
 		idString := ctx.Param("id")
 		id, err := strconv.Atoi(idString)
 		if err != nil {
@@ -100,16 +100,16 @@ func(h *patientHandler) Put() gin.HandlerFunc{
 
 }
 
-//Patch patient
+// Patch patient
 func (h *patientHandler) Patch() gin.HandlerFunc {
 	type Request struct {
-		Name string `json:"name,omitempty"`
-		Lastname string `json:"lastname,omitempty"`
-		Address string `json:"address,omitempty"`
-		DNI string `json:"dni,omitempty"`
+		Name     string `json:"name,omitempty"`
+		Lastname string `json:"last_name,omitempty"`
+		Address  string `json:"adress,omitempty"`
+		DNI      string `json:"dni,omitempty"`
 	}
 
-	return func (ctx *gin.Context){
+	return func(ctx *gin.Context) {
 		var r Request
 		idParam := ctx.Param("id")
 		id, err := strconv.Atoi(idParam)
@@ -122,10 +122,10 @@ func (h *patientHandler) Patch() gin.HandlerFunc {
 			return
 		}
 		update := domain.Patient{
-			Name: r.Name,
+			Name:     r.Name,
 			Lastname: r.Lastname,
-			Address: r.Address,
-			DNI: r.DNI,
+			Address:  r.Address,
+			DNI:      r.DNI,
 		}
 		p, err := h.s.Patch(id, update)
 		if err != nil {
@@ -137,22 +137,20 @@ func (h *patientHandler) Patch() gin.HandlerFunc {
 	}
 }
 
-
-
-
 // validateEmptys valida que los campos no esten vacios
 func validateEmptys(patient *domain.Patient) (bool, error) {
 	switch {
-	case patient.Name == "" || patient.Lastname == "" || patient.Address == "" || patient.DNI == "" :
+	case patient.Name == "" || patient.Lastname == "" || patient.Address == "" || patient.DNI == "":
 		return false, errors.New("fields can't be empty")
 	}
 	return true, nil
 
 }
 
-// Delete elimina un producto
+// DELETE elimina un paciente
 func (h *patientHandler) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+
 		idParam := ctx.Param("id")
 		id, err := strconv.Atoi(idParam)
 		if err != nil {
@@ -164,6 +162,6 @@ func (h *patientHandler) Delete() gin.HandlerFunc {
 			ctx.JSON(400, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.JSON(204, gin.H{"msg": "product deleted"})
+		ctx.JSON(204, gin.H{"msg": "patient deleted"})
 	}
 }

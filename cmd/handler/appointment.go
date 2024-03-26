@@ -2,6 +2,7 @@ package handler
 
 import (
 	"strconv"
+	"errors"
 
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/appointment"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/domain"
@@ -61,5 +62,104 @@ func (h *appointmentHandler) GetByID() gin.HandlerFunc {
 			return
 		}
 		c.JSON(200, appointment)
+	}
+}
+
+// UPDATE appointment
+func (h *appointmentHandler) Put() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		idString := ctx.Param("id")
+		id, err := strconv.Atoi(idString)
+		if err != nil {
+			ctx.JSON(400, gin.H{"error": "invalid id"})
+			return
+		}
+
+		var appointment domain.Appointment
+		err = ctx.ShouldBindJSON(&appointment)
+		if err != nil {
+			ctx.JSON(400, gin.H{"error": "invalid appointment"})
+			return
+		}
+
+		valid, err := validateEmptys(&appointment)
+		if !valid {
+			ctx.JSON(400, gin.H{"error": err.Error()})
+			return
+		}
+
+		p, err := h.s.Update(id, appointment)
+		if err != nil {
+			ctx.JSON(400, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.JSON(201, p)
+	}
+
+}
+
+// Patch appointment
+func (h *appointmentHandler) Patch() gin.HandlerFunc {
+	type Request struct {
+		PatientId     string `json:"patient_id,omitempty"`
+		DentistId	  string `json:"dentist_id,omitempty"`
+		Description   string `json:"description,omitempty"`
+	}
+
+	return func(ctx *gin.Context) {
+		var r Request
+		idParam := ctx.Param("id")
+		id, err := strconv.Atoi(idParam)
+		if err != nil {
+			ctx.JSON(400, gin.H{"error": "invalid id"})
+			return
+		}
+		if err := ctx.ShouldBindJSON(&r); err != nil {
+			ctx.JSON(400, gin.H{"error": "invalid json"})
+			return
+		}
+		update := domain.Appointment{
+			PatientId: r.PatientId,
+			DentistId: r.DentistId,
+			Description:  r.Description,
+		}
+		p, err := h.s.Patch(id, update)
+		if err != nil {
+			ctx.JSON(400, gin.H{"error": err.Error()})
+			return
+		}
+		ctx.JSON(201, p)
+
+	}
+}
+
+// validateEmptys valida que los campos no esten vacios
+func validateEmptys(appointment *domain.Appointment) (bool, error) {
+	switch {
+	case appointment.PatientId == "" || appointment.DentistId == "" || appointment.Description == "" :
+		return false, errors.New("fields can't be empty")
+	}
+	return true, nil
+
+}
+
+// DELETE elimina un appointment
+func (h *appointmentHandler) Delete() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		idParam := ctx.Param("id")
+		id, err := strconv.Atoi(idParam)
+		if err != nil {
+			ctx.JSON(400, gin.H{"error": "invalid id"})
+			return
+		}
+		err = h.s.Delete(id)
+		if err != nil {
+			ctx.JSON(400, gin.H{"error": err.Error()})
+			return
+		}
+		ctx.JSON(204, gin.H{"msg": "appointment deleted"})
 	}
 }

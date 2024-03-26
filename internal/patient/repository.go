@@ -40,7 +40,7 @@ func (r *repository) validateCodeValue(dni string) bool {
 	return true
 }
 
-// GetAll devuelve todos los productos
+// GetAll devuelve todos los pacientes
 func (r *repository) GetAll() []domain.Patient {
 	return r.list
 }

@@ -48,6 +48,7 @@ func main() {
 	{
 		appointments.POST("", appointmentHandler.Post())
 		appointments.GET("", appointmentHandler.GetAll())
+		appointments.GET(":id", appointmentHandler.GetByID())
 	}
 
 	r.Run(":8081")

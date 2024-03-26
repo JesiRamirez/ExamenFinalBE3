@@ -2,6 +2,7 @@ package appointmentDNILicense
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/domain"
 )
@@ -35,7 +36,10 @@ func (r *repository) GetAll() []domain.AppointmentDNILicense {
 // Get AppointmentDNILicense by ID
 func (r *repository) GetByPatientDNI(dni string) (domain.AppointmentDNILicense, error) {
 	for _, appointmentDNILicense := range r.list {
+		fmt.Println("hola dni", dni)
+		fmt.Println("objeto", appointmentDNILicense.PatientDNI)
 		if appointmentDNILicense.PatientDNI == dni {
+
 			return appointmentDNILicense, nil
 		}
 	}

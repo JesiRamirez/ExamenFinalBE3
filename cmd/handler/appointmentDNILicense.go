@@ -39,11 +39,11 @@ func (h *appointmentDNILicenseHandler) Post() gin.HandlerFunc {
 // GET AppointmentDNILicense by ID
 func (h *appointmentDNILicenseHandler) GetByPatientDNI() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		dniParam := c.Param("dni")
+		dniParam := c.Query("dni")
 
 		appointmentDNILicense, err := h.s.GetByPatientDNI(dniParam)
 		if err != nil {
-			c.JSON(404, gin.H{"error": "AppointmentDNILicense not found"})
+			c.JSON(404, gin.H{"error": err.Error()})
 			return
 		}
 		c.JSON(200, appointmentDNILicense)

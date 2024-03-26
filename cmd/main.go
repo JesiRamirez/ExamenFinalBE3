@@ -60,7 +60,7 @@ func main() {
 	appointmentsDNILicense := r.Group("/appointmentsDNI")
 	{
 		appointmentsDNILicense.POST("", appointmentDNILicenseHandler.Post())
-		appointmentsDNILicense.GET(":id", appointmentDNILicenseHandler.GetByPatientDNI())
+		appointmentsDNILicense.GET("/dni", appointmentDNILicenseHandler.GetByPatientDNI())
 	}
 
 	r.Run(":8081")

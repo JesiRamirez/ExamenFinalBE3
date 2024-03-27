@@ -10,7 +10,7 @@ import (
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/dentist"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/domain"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/patient"
-	"github.com/bootcamp-go/ExamenFinalBE3.git/pkg/store"
+	"github.com/bootcamp-go/ExamenFinalBE3.git/pkg/store/patient"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )

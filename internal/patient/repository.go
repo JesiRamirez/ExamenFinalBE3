@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/domain"
-	"github.com/bootcamp-go/ExamenFinalBE3.git/pkg/store"
+	"github.com/bootcamp-go/ExamenFinalBE3.git/pkg/store/patient"
 )
 
 type Repository interface {

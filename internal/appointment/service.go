@@ -33,7 +33,10 @@ func (s *service) Create(p domain.Appointment) (domain.Appointment, error) {
 
 // Get all Appointment
 func (s *service) GetAll() ([]domain.Appointment, error) {
-	l := s.r.GetAll()
+	l, err := s.r.GetAll()
+	if err != nil {
+		return nil, err
+	}
 	return l, nil
 }
 

@@ -10,8 +10,9 @@ import (
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/dentist"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/domain"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/patient"
-	"github.com/bootcamp-go/ExamenFinalBE3.git/pkg/store/patient"
+	"github.com/bootcamp-go/ExamenFinalBE3.git/pkg/store/AppointmentStore"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/pkg/store/dentistStore"
+	"github.com/bootcamp-go/ExamenFinalBE3.git/pkg/store/patient"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -27,11 +28,12 @@ func main() {
 
 	storage := store.NewSqlStorePatient(bd)
 	storageDentist := dentistStore.NewSqlStoreDentist(bd)
+	storageAppointment := appointmentStore.NewSqlStoreAppointment(bd)
 
 
 	//var patientsList = []domain.Patient{}
 	//var dentistsList = []domain.Dentist{}
-	var appointmentList = []domain.Appointment{}
+	//var appointmentList = []domain.Appointment{}
 	var appointmentsDNILicenseList = []domain.AppointmentDNILicense{}
 
 	repo := patient.NewRepository(storage)
@@ -42,7 +44,7 @@ func main() {
 	serviceDentist := dentist.NewService(repoDentist)
 	dentistHandler := handler.NewDentistHandler(serviceDentist)
 
-	repoAppointment := appointment.NewRepository(appointmentList)
+	repoAppointment := appointment.NewRepository(storageAppointment)
 	serviceAppointment := appointment.NewService(repoAppointment)
 	appointmentHandler := handler.NewAppointmentHandler(serviceAppointment)
 

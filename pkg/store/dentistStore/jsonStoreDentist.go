@@ -13,7 +13,6 @@ type jsonStoreDentist struct {
 }
 
 
-// loaddDentist carga los productos desde un archivo json
 func (s *jsonStoreDentist) loadDentists() ([]domain.Dentist, error) {
 	var dentist []domain.Dentist
 	file, err := os.ReadFile(s.pathToFile)
@@ -27,7 +26,6 @@ func (s *jsonStoreDentist) loadDentists() ([]domain.Dentist, error) {
 	return dentist, nil
 }
 
-// saveDentist guarda los pacientes en un archivo json
 func (s *jsonStoreDentist) saveDentists(dentists []domain.Dentist) error {
 	bytes, err := json.Marshal(dentists)
 	if err != nil {
@@ -36,7 +34,6 @@ func (s *jsonStoreDentist) saveDentists(dentists []domain.Dentist) error {
 	return os.WriteFile(s.pathToFile, bytes, 0644)
 }
 
-// NewJsonStore crea un nuevo store de paciente
 func NewJsonStoreDentist(path string) StoreInterfaceDentist {
 	_, err := os.Stat(path)
 	if err != nil {

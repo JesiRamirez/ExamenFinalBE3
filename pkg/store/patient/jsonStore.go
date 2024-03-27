@@ -13,7 +13,6 @@ type jsonStore struct {
 }
 
 
-// loaddPatients carga los productos desde un archivo json
 func (s *jsonStore) loadPatients() ([]domain.Patient, error) {
 	var patients []domain.Patient
 	file, err := os.ReadFile(s.pathToFile)

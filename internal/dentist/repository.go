@@ -43,7 +43,8 @@ func (r *repository) GetAll() ([]domain.Dentist, error) {
 	if err != nil {
 		return nil, err
 	}
-	return dentists, nil}
+	return dentists, nil
+}
 
 // Get dentist by ID
 func (r *repository) GetByID(id int) (domain.Dentist, error) {

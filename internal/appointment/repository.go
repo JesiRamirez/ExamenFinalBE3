@@ -4,11 +4,12 @@ import (
 	"errors"
 
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/domain"
+	"github.com/bootcamp-go/ExamenFinalBE3.git/pkg/store/AppointmentStore"
 )
 
 type Repository interface {
 	Create(p domain.Appointment) (domain.Appointment, error)
-	GetAll() []domain.Appointment
+	GetAll() ([]domain.Appointment, error)
 	GetByID(id int) (domain.Appointment, error)
 	Update(id int, p domain.Appointment) (domain.Appointment, error)
 	Patch(id int, p domain.Appointment) (domain.Appointment, error)
@@ -16,50 +17,54 @@ type Repository interface {
 }
 
 type repository struct {
-	list []domain.Appointment
+	storageAppointment appointmentStore.StoreInterfaceAppointment
 }
 
-func NewRepository(list []domain.Appointment) Repository {
-	return &repository{list}
+func NewRepository(storageAppointment appointmentStore.StoreInterfaceAppointment) Repository {
+	return &repository{storageAppointment}
 }
 
 // Create a new appointment
 func (r *repository) Create(p domain.Appointment) (domain.Appointment, error) {
 
-	p.Id = len(r.list) + 1
-	r.list = append(r.list, p)
+	if !r.storageAppointment.Exists(p.Id) {
+		return domain.Appointment{}, errors.New("id already exists")
+	}
+	err := r.storageAppointment.Create(p)
+	if err != nil {
+		return	domain.Appointment{}, errors.New("error creating appointment")
+	}
 	return p, nil
 }
 
 // GetAll devuelve todos los appointment
-func (r *repository) GetAll() []domain.Appointment {
-	return r.list
+func (r *repository) GetAll() ([]domain.Appointment, error) {
+	appointments, err := r.storageAppointment.GetAll()
+	if err != nil {
+		return nil, err
+	}
+	return appointments, nil
 }
 
 // Get appointment by ID
 func (r *repository) GetByID(id int) (domain.Appointment, error) {
-	for _, appointment := range r.list {
-		if appointment.Id == id {
-			return appointment, nil
-		}
+	appointment, err := r.storageAppointment.Read(id)
+	if err != nil {
+		return domain.Appointment{}, errors.New("appointment not found")
 	}
-	return domain.Appointment{}, errors.New("appointment not found")
+	return appointment, nil
 
 }
 
 // Update Appointment
 func (r *repository) Update(id int, p domain.Appointment) (domain.Appointment, error) {
 
-	update := false
-	for i, v := range r.list {
-		if v.Id == id {
-			p.Id = id
-			r.list[i] = p
-			update = true
-		}
+	if !r.storageAppointment.Exists(p.Id) {
+		return domain.Appointment{}, errors.New("id already exists")
 	}
-	if !update {
-		return domain.Appointment{}, errors.New("patient not found")
+	err := r.storageAppointment.Update(p)
+	if err != nil {
+		return domain.Appointment{}, errors.New("error updating appointment")
 	}
 	return p, nil
 }
@@ -67,31 +72,18 @@ func (r *repository) Update(id int, p domain.Appointment) (domain.Appointment, e
 // Patch patient
 func (r *repository) Patch(id int, p domain.Appointment) (domain.Appointment, error) {
 
-	update := false
-	for i, v := range r.list {
-		if v.Id == id {
-			p.Id = id
-			r.list[i] = p
-			update = true
-		}
-	}
-	if !update {
-		return domain.Appointment{}, errors.New("appointment not found")
+	err := r.storageAppointment.Update(p)
+	if err != nil {
+		return domain.Appointment{}, errors.New("error updating appointment")
 	}
 	return p, nil
 }
 
 // Delete appointment
 func (r *repository) Delete(id int) error {
-	deleted := false
-	for i, v := range r.list {
-		if v.Id == id {
-			r.list = append(r.list[:i], r.list[i+1:]...)
-			deleted = true
-		}
-	}
-	if !deleted {
-		return errors.New("appointment not found")
+	err := r.storageAppointment.Delete(id)
+	if err != nil {
+		return err
 	}
 	return nil
 }

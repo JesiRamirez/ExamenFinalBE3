@@ -83,7 +83,7 @@ func (h *appointmentHandler) Put() gin.HandlerFunc {
 			return
 		}
 
-		valid, err := validateEmptys(&appointment)
+		valid, err := validateEmptysApp(&appointment)
 		if !valid {
 			ctx.JSON(400, gin.H{"error": err.Error()})
 			return
@@ -136,7 +136,7 @@ func (h *appointmentHandler) Patch() gin.HandlerFunc {
 }
 
 // validateEmptys valida que los campos no esten vacios
-func validateEmptys(appointment *domain.Appointment) (bool, error) {
+func validateEmptysApp(appointment *domain.Appointment) (bool, error) {
 	switch {
 	case appointment.PatientId == "" || appointment.DentistId == "" || appointment.Description == "" :
 		return false, errors.New("fields can't be empty")

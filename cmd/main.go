@@ -21,7 +21,8 @@ func main() {
 
 	//storage := store.NewJsonStore("./patients.json")
 	//storageDentist := store.NewJsonStoreDentist("./dentists.json")
-	bd, err := sql.Open("mysql", "root:root@tcp(localhost:3310)/my_db")
+	
+	bd, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/turnos-odontologia")
 	if err != nil{
 		log.Fatal(err)
 	}

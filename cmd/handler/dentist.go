@@ -2,7 +2,6 @@ package handler
 
 import (
 	"strconv"
-	"errors"
 
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/dentist"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/domain"
@@ -65,10 +64,10 @@ func (h *dentistHandler) GetByID() gin.HandlerFunc {
 	}
 }
 
-//UPDATE dentist
-func(h *dentistHandler) Put() gin.HandlerFunc{
-	return func(ctx *gin.Context){
-		
+// UPDATE dentist
+func (h *dentistHandler) Put() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
 		idString := ctx.Param("id")
 		id, err := strconv.Atoi(idString)
 		if err != nil {
@@ -83,12 +82,6 @@ func(h *dentistHandler) Put() gin.HandlerFunc{
 			return
 		}
 
-		valid, err := validateEmptys(&dentist)
-		if !valid {
-			ctx.JSON(400, gin.H{"error": err.Error()})
-			return
-		}
-
 		p, err := h.s.Update(id, dentist)
 		if err != nil {
 			ctx.JSON(400, gin.H{"error": err.Error()})
@@ -100,15 +93,15 @@ func(h *dentistHandler) Put() gin.HandlerFunc{
 
 }
 
-//Patch dentist
+// Patch dentist
 func (h *dentistHandler) Patch() gin.HandlerFunc {
 	type Request struct {
-		Name string `json:"name,omitempty"`
+		Name     string `json:"name,omitempty"`
 		Lastname string `json:"lastname,omitempty"`
-		License string `json:"license,omitempty"`
+		License  string `json:"license,omitempty"`
 	}
 
-	return func (ctx *gin.Context){
+	return func(ctx *gin.Context) {
 		var r Request
 		idParam := ctx.Param("id")
 		id, err := strconv.Atoi(idParam)
@@ -121,9 +114,9 @@ func (h *dentistHandler) Patch() gin.HandlerFunc {
 			return
 		}
 		update := domain.Dentist{
-			Name: r.Name,
+			Name:     r.Name,
 			Lastname: r.Lastname,
-			License: r.License,
+			License:  r.License,
 		}
 		p, err := h.s.Patch(id, update)
 		if err != nil {
@@ -133,18 +126,6 @@ func (h *dentistHandler) Patch() gin.HandlerFunc {
 		ctx.JSON(201, p)
 
 	}
-}
-
-
-
-// validateEmptys valida que los campos no esten vacios
-func validateEmptys(dentist *domain.Dentist) (bool, error) {
-	switch {
-	case dentist.Name == "" || dentist.Lastname == "" || dentist.License == "" :
-		return false, errors.New("fields can't be empty")
-	}
-	return true, nil
-
 }
 
 // Delete elimina un producto

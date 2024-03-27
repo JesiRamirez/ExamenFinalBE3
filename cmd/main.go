@@ -7,10 +7,17 @@ import (
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/dentist"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/domain"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/patient"
+	"github.com/bootcamp-go/ExamenFinalBE3.git/pkg/middleware"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+
+	if err := godotenv.Load(".env"); err != nil {
+		panic("Error loading .env file: " + err.Error())
+	}
+
 	var patientsList = []domain.Patient{}
 	var dentistsList = []domain.Dentist{}
 	var appointmentList = []domain.Appointment{}
@@ -32,28 +39,30 @@ func main() {
 	serviceAppointmentDNILicense := appointmentDNILicense.NewService(repoAppointmentDNILicense)
 	appointmentDNILicenseHandler := handler.NewAppointmentDNILicenseHandler(serviceAppointmentDNILicense)
 
-	r := gin.Default()
+	r := gin.New()
+	r.Use(gin.Recovery())
+	r.Use(middleware.Logger())
 
 	r.GET("/ping", func(c *gin.Context) { c.String(200, "pong") })
 
 	patients := r.Group("/patients")
 	{
-		patients.POST("", patientHandler.Post())
+		patients.POST("", middleware.Authentication(), patientHandler.Post())
 		patients.GET("", patientHandler.GetAll())
 		patients.GET(":id", patientHandler.GetByID())
-		patients.PUT(":id", patientHandler.Put())
-		patients.PATCH(":id", patientHandler.Patch())
-		patients.DELETE(":id", patientHandler.Delete())
+		patients.PUT(":id", middleware.Authentication(), patientHandler.Put())
+		patients.PATCH(":id", middleware.Authentication(), patientHandler.Patch())
+		patients.DELETE(":id", middleware.Authentication(), patientHandler.Delete())
 	}
 
 	dentists := r.Group("/dentists")
 	{
-		dentists.POST("", dentistHandler.Post())
+		dentists.POST("", middleware.Authentication(), dentistHandler.Post())
 		dentists.GET("", dentistHandler.GetAll())
 		dentists.GET(":id", dentistHandler.GetByID())
-		dentists.PUT(":id", dentistHandler.Put())
-		dentists.PATCH(":id", dentistHandler.Patch())
-		dentists.DELETE(":id", dentistHandler.Delete())
+		dentists.PUT(":id", middleware.Authentication(), dentistHandler.Put())
+		dentists.PATCH(":id", middleware.Authentication(), dentistHandler.Patch())
+		dentists.DELETE(":id", middleware.Authentication(), dentistHandler.Delete())
 	}
 
 	appointments := r.Group("/appointments")

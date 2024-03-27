@@ -6,6 +6,7 @@ import (
 
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/domain"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/patient"
+	"github.com/bootcamp-go/ExamenFinalBE3.git/pkg/web"
 	"github.com/gin-gonic/gin"
 )
 
@@ -26,16 +27,16 @@ func (h *patientHandler) Post() gin.HandlerFunc {
 		var patient domain.Patient
 		err := ctx.ShouldBindJSON(&patient)
 		if err != nil {
-			ctx.JSON(400, gin.H{"error": "invalid patient"})
+			web.Failure(ctx, 400, errors.New("invalid patient"))
 			return
 		}
 
 		p, err := h.s.Create(patient)
 		if err != nil {
-			ctx.JSON(400, gin.H{"error": err.Error()})
+			web.Failure(ctx, 400, err)
 			return
 		}
-		ctx.JSON(201, p)
+		web.Success(ctx, 201, p)
 	}
 }
 
@@ -80,12 +81,6 @@ func (h *patientHandler) Put() gin.HandlerFunc {
 		err = ctx.ShouldBindJSON(&patient)
 		if err != nil {
 			ctx.JSON(400, gin.H{"error": "invalid patient"})
-			return
-		}
-
-		valid, err := validateEmptys(&patient)
-		if !valid {
-			ctx.JSON(400, gin.H{"error": err.Error()})
 			return
 		}
 
@@ -135,16 +130,6 @@ func (h *patientHandler) Patch() gin.HandlerFunc {
 		ctx.JSON(201, p)
 
 	}
-}
-
-// validateEmptys valida que los campos no esten vacios
-func validateEmptys(patient *domain.Patient) (bool, error) {
-	switch {
-	case patient.Name == "" || patient.Lastname == "" || patient.Address == "" || patient.DNI == "":
-		return false, errors.New("fields can't be empty")
-	}
-	return true, nil
-
 }
 
 // DELETE elimina un paciente

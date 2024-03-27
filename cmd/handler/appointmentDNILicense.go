@@ -1,8 +1,11 @@
 package handler
 
 import (
+	"errors"
+
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/appointmentDNILicense"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/domain"
+	"github.com/bootcamp-go/ExamenFinalBE3.git/pkg/web"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,16 +26,16 @@ func (h *appointmentDNILicenseHandler) Post() gin.HandlerFunc {
 		var appointmentDNILicense domain.AppointmentDNILicense
 		err := ctx.ShouldBindJSON(&appointmentDNILicense)
 		if err != nil {
-			ctx.JSON(400, gin.H{"error": "invalid AppointmentDNILicense", "details": err.Error()})
+			web.Failure(ctx, 400, errors.New("invalid appointment"))
 			return
 		}
 
 		p, err := h.s.Create(appointmentDNILicense)
 		if err != nil {
-			ctx.JSON(400, gin.H{"error": err.Error()})
+			web.Failure(ctx, 400, err)
 			return
 		}
-		ctx.JSON(201, p)
+		web.Success(ctx, 201, p)
 	}
 }
 

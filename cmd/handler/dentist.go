@@ -1,10 +1,12 @@
 package handler
 
 import (
+	"errors"
 	"strconv"
 
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/dentist"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/domain"
+	"github.com/bootcamp-go/ExamenFinalBE3.git/pkg/web"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,16 +27,16 @@ func (h *dentistHandler) Post() gin.HandlerFunc {
 		var dentist domain.Dentist
 		err := ctx.ShouldBindJSON(&dentist)
 		if err != nil {
-			ctx.JSON(400, gin.H{"error": "invalid dentist"})
+			web.Failure(ctx, 400, errors.New("invalid dentist"))
 			return
 		}
 
 		p, err := h.s.Create(dentist)
 		if err != nil {
-			ctx.JSON(400, gin.H{"error": err.Error()})
+			web.Failure(ctx, 400, err)
 			return
 		}
-		ctx.JSON(201, p)
+		web.Success(ctx, 201, p)
 	}
 }
 

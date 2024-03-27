@@ -1,10 +1,12 @@
 package handler
 
 import (
+	"errors"
 	"strconv"
 
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/appointment"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/domain"
+	"github.com/bootcamp-go/ExamenFinalBE3.git/pkg/web"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,16 +27,16 @@ func (h *appointmentHandler) Post() gin.HandlerFunc {
 		var appointment domain.Appointment
 		err := ctx.ShouldBindJSON(&appointment)
 		if err != nil {
-			ctx.JSON(400, gin.H{"error": "invalid appointment", "details": err.Error()})
+			web.Failure(ctx, 400, errors.New("invalid appointment"))
 			return
 		}
 
 		p, err := h.s.Create(appointment)
 		if err != nil {
-			ctx.JSON(400, gin.H{"error": err.Error()})
+			web.Failure(ctx, 400, err)
 			return
 		}
-		ctx.JSON(201, p)
+		web.Success(ctx, 201, p)
 	}
 }
 

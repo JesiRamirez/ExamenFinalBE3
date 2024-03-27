@@ -11,6 +11,7 @@ import (
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/domain"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/patient"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/pkg/store/patient"
+	"github.com/bootcamp-go/ExamenFinalBE3.git/pkg/store/dentistStore"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -18,16 +19,18 @@ import (
 func main() {
 
 	//storage := store.NewJsonStore("./patients.json")
+	//storageDentist := store.NewJsonStoreDentist("./dentists.json")
 	bd, err := sql.Open("mysql", "root:root@tcp(localhost:3310)/my_db")
 	if err != nil{
 		log.Fatal(err)
 	}
 
 	storage := store.NewSqlStorePatient(bd)
+	storageDentist := dentistStore.NewSqlStoreDentist(bd)
 
 
 	//var patientsList = []domain.Patient{}
-	var dentistsList = []domain.Dentist{}
+	//var dentistsList = []domain.Dentist{}
 	var appointmentList = []domain.Appointment{}
 	var appointmentsDNILicenseList = []domain.AppointmentDNILicense{}
 
@@ -35,7 +38,7 @@ func main() {
 	service := patient.NewService(repo)
 	patientHandler := handler.NewPatientHandler(service)
 
-	repoDentist := dentist.NewRepository(dentistsList)
+	repoDentist := dentist.NewRepository(storageDentist)
 	serviceDentist := dentist.NewService(repoDentist)
 	dentistHandler := handler.NewDentistHandler(serviceDentist)
 

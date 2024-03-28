@@ -35,8 +35,8 @@ CREATE TABLE `patients` (
   `name` varchar(50) DEFAULT NULL,
   `adress` varchar(50) DEFAULT NULL,
   `dni` varchar(50) DEFAULT NULL,
-  `admission_date` date DEFAULT NULL,
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `admission_date` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -50,8 +50,8 @@ CREATE TABLE `dentists` (
   `id` int DEFAULT NULL,
   `last_name` varchar(50) DEFAULT NULL,
   `name` varchar(50) DEFAULT NULL,
-  `licence` varchar(50) DEFAULT NULL,
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `licence` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 
@@ -67,6 +67,6 @@ CREATE TABLE `appointments` (
   `patient_id` varchar(5) DEFAULT NULL,
   `dentist_id` varchar(5) DEFAULT NULL,
   `date` date DEFAULT NULL,
-  `description` varchar(50) DEFAULT NULL,
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `description` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 /*!40101 SET character_set_client = @saved_cs_client */;

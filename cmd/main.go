@@ -10,9 +10,9 @@ import (
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/dentist"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/domain"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/patient"
-	"github.com/bootcamp-go/ExamenFinalBE3.git/pkg/store/AppointmentStore"
+	appointmentStore "github.com/bootcamp-go/ExamenFinalBE3.git/pkg/store/AppointmentStore"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/pkg/store/dentistStore"
-	"github.com/bootcamp-go/ExamenFinalBE3.git/pkg/store/patient"
+	store "github.com/bootcamp-go/ExamenFinalBE3.git/pkg/store/patient"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -21,16 +21,15 @@ func main() {
 
 	//storage := store.NewJsonStore("./patients.json")
 	//storageDentist := store.NewJsonStoreDentist("./dentists.json")
-	
-	bd, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/turnos-odontologia")
-	if err != nil{
+
+	bd, err := sql.Open("mysql", "root:root@tcp(localhost:3307)/my_db")
+	if err != nil {
 		log.Fatal(err)
 	}
 
 	storage := store.NewSqlStorePatient(bd)
 	storageDentist := dentistStore.NewSqlStoreDentist(bd)
 	storageAppointment := appointmentStore.NewSqlStoreAppointment(bd)
-
 
 	//var patientsList = []domain.Patient{}
 	//var dentistsList = []domain.Dentist{}

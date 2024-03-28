@@ -26,16 +26,15 @@ func NewRepository(storageDentist dentistStore.StoreInterfaceDentist) Repository
 
 // Create a new dentist
 func (r *repository) Create(p domain.Dentist) (domain.Dentist, error) {
-	if !r.storageDentist.Exists(p.License) {
+	if r.storageDentist.Exists(p.License) {
 		return domain.Dentist{}, errors.New("dentist already exists")
 	}
 	err := r.storageDentist.Create(p)
 	if err != nil {
-		return	domain.Dentist{}, errors.New("error creating dentist")
+		return domain.Dentist{}, errors.New("error creating dentist")
 	}
 	return p, nil
 }
-
 
 // GetAll dentists
 func (r *repository) GetAll() ([]domain.Dentist, error) {
@@ -56,9 +55,9 @@ func (r *repository) GetByID(id int) (domain.Dentist, error) {
 
 }
 
-//Update Dentist
-func (r *repository) Update(id int, p domain.Dentist) (domain.Dentist, error){
-	if !r.storageDentist.Exists(p.License) {
+// Update Dentist
+func (r *repository) Update(id int, p domain.Dentist) (domain.Dentist, error) {
+	if r.storageDentist.Exists(p.License) {
 		return domain.Dentist{}, errors.New("license already exists")
 	}
 	err := r.storageDentist.Update(p)
@@ -68,9 +67,9 @@ func (r *repository) Update(id int, p domain.Dentist) (domain.Dentist, error){
 	return p, nil
 }
 
-//Patch dentist
-func (r *repository) Patch(id int, p domain.Dentist) (domain.Dentist, error){
-	
+// Patch dentist
+func (r *repository) Patch(id int, p domain.Dentist) (domain.Dentist, error) {
+
 	err := r.storageDentist.Update(p)
 	if err != nil {
 		return domain.Dentist{}, errors.New("error updating dentist")
@@ -78,8 +77,8 @@ func (r *repository) Patch(id int, p domain.Dentist) (domain.Dentist, error){
 	return p, nil
 }
 
-//Delete dentist
-func(r *repository) Delete(id int) error {
+// Delete dentist
+func (r *repository) Delete(id int) error {
 	err := r.storageDentist.Delete(id)
 	if err != nil {
 		return err

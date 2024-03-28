@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"log"
 
 	"github.com/bootcamp-go/ExamenFinalBE3.git/cmd/handler"
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/appointment"
@@ -22,9 +21,13 @@ func main() {
 	//storage := store.NewJsonStore("./patients.json")
 	//storageDentist := store.NewJsonStoreDentist("./dentists.json")
 
-	bd, err := sql.Open("mysql", "root:root@tcp(localhost:3307)/my_db")
+	bd, err := sql.Open("mysql", "root:@tcp(localhost:3307)/my_db")
 	if err != nil {
-		log.Fatal(err)
+		panic(err.Error())
+	}
+	err = bd.Ping()
+	if err != nil {
+		panic(err.Error())
 	}
 
 	storage := store.NewSqlStorePatient(bd)

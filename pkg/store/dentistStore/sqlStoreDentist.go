@@ -2,11 +2,10 @@ package dentistStore
 
 import (
 	"database/sql"
-	"log"
 	"fmt"
+	"log"
 
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/domain"
-	
 )
 
 type sqlStoreDentist struct {
@@ -55,14 +54,14 @@ func (s *sqlStoreDentist) GetAll() ([]domain.Dentist, error) {
 	return listReturn, nil
 }
 
-//Create agrega un nuevo dentista
+// Create agrega un nuevo dentista
 func (s *sqlStoreDentist) Create(dentist domain.Dentist) error {
 	query := "INSERT INTO dentists (last_name, name, license) VALUES (?, ?, ?);"
 	stmt, err := s.db.Prepare(query)
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	res, err := stmt.Exec(dentist.Lastname, dentist.Name, dentist.License)
 	if err != nil {
 		log.Fatal(err)
@@ -76,9 +75,9 @@ func (s *sqlStoreDentist) Create(dentist domain.Dentist) error {
 	return nil
 }
 
-//Update actualiza un dentista
+// Update actualiza un dentista
 func (s *sqlStoreDentist) Update(dentist domain.Dentist) error {
-	query := "UPDATE dentist SET last_name = ?, name = ?, license = ? WHERE id = ?;"
+	query := "UPDATE dentists SET last_name = ?, name = ?, license = ? WHERE id = ?;"
 	stmt, err := s.db.Prepare(query)
 	if err != nil {
 		return err
@@ -94,7 +93,7 @@ func (s *sqlStoreDentist) Update(dentist domain.Dentist) error {
 	return nil
 }
 
-//Delete elimina un dentist
+// Delete elimina un dentist
 func (s *sqlStoreDentist) Delete(id int) error {
 	query := "DELETE FROM dentists WHERE id = ?;"
 	stmt, err := s.db.Prepare(query)
@@ -112,11 +111,11 @@ func (s *sqlStoreDentist) Delete(id int) error {
 	return nil
 }
 
-//Exists verifica si un dentist existe
+// Exists verifica si un dentist existe
 func (s *sqlStoreDentist) Exists(license string) bool {
 	var exists bool
 	var id int
-	query := "SELECT id FROM dentists WHERE dni = ?;"
+	query := "SELECT id FROM dentists WHERE license = ?;"
 	row := s.db.QueryRow(query, license)
 	err := row.Scan(&id)
 	if err != nil {

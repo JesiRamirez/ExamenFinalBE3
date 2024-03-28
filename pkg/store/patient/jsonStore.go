@@ -12,7 +12,6 @@ type jsonStore struct {
 	pathToFile string
 }
 
-
 func (s *jsonStore) loadPatients() ([]domain.Patient, error) {
 	var patients []domain.Patient
 	file, err := os.ReadFile(s.pathToFile)
@@ -46,10 +45,9 @@ func NewJsonStore(path string) StoreInterfacePatient {
 	}
 }
 
-func (s *jsonStore)GetAll() ([]domain.Patient, error) {
+func (s *jsonStore) GetAll() ([]domain.Patient, error) {
 	return nil, nil
 }
-
 
 func (s *jsonStore) Read(id int) (domain.Patient, error) {
 	patients, err := s.loadPatients()
@@ -99,7 +97,8 @@ func (s *jsonStore) Delete(id int) error {
 			return s.savePatients(patients)
 		}
 	}
-	return errors.New("product not found")}
+	return errors.New("product not found")
+}
 
 func (s *jsonStore) Exists(dni string) bool {
 	patients, err := s.loadPatients()

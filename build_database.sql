@@ -30,7 +30,7 @@ DROP TABLE IF EXISTS `patients`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `patients` (
-  `id` int DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `last_name` varchar(50) DEFAULT NULL,
   `name` varchar(50) DEFAULT NULL,
   `adress` varchar(50) DEFAULT NULL,
@@ -47,10 +47,10 @@ DROP TABLE IF EXISTS `dentists`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dentists` (
-  `id` int DEFAULT NULL,
+  `id` NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `last_name` varchar(50) DEFAULT NULL,
   `name` varchar(50) DEFAULT NULL,
-  `licence` varchar(50) DEFAULT NULL
+  `license` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -63,7 +63,7 @@ DROP TABLE IF EXISTS `appointments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `appointments` (
-  `id` int DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `patient_id` varchar(5) DEFAULT NULL,
   `dentist_id` varchar(5) DEFAULT NULL,
   `date` date DEFAULT NULL,

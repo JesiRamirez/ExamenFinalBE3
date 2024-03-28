@@ -12,18 +12,17 @@ type jsonStoreDentist struct {
 	pathToFile string
 }
 
-
 func (s *jsonStoreDentist) loadDentists() ([]domain.Dentist, error) {
-	var dentist []domain.Dentist
+	var dentists []domain.Dentist
 	file, err := os.ReadFile(s.pathToFile)
 	if err != nil {
 		return nil, err
 	}
-	err = json.Unmarshal([]byte(file), &dentist)
+	err = json.Unmarshal([]byte(file), &dentists)
 	if err != nil {
 		return nil, err
 	}
-	return dentist, nil
+	return dentists, nil
 }
 
 func (s *jsonStoreDentist) saveDentists(dentists []domain.Dentist) error {
@@ -44,10 +43,9 @@ func NewJsonStoreDentist(path string) StoreInterfaceDentist {
 	}
 }
 
-func (s *jsonStoreDentist)GetAll() ([]domain.Dentist, error) {
+func (s *jsonStoreDentist) GetAll() ([]domain.Dentist, error) {
 	return nil, nil
 }
-
 
 func (s *jsonStoreDentist) Read(id int) (domain.Dentist, error) {
 	dentists, err := s.loadDentists()
@@ -97,7 +95,8 @@ func (s *jsonStoreDentist) Delete(id int) error {
 			return s.saveDentists(dentists)
 		}
 	}
-	return errors.New("dentist not found")}
+	return errors.New("dentist not found")
+}
 
 func (s *jsonStoreDentist) Exists(license string) bool {
 	dentists, err := s.loadDentists()

@@ -2,11 +2,10 @@ package store
 
 import (
 	"database/sql"
-	"log"
 	"fmt"
+	"log"
 
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/domain"
-	
 )
 
 type sqlStorePatient struct {
@@ -55,14 +54,14 @@ func (s *sqlStorePatient) GetAll() ([]domain.Patient, error) {
 	return listReturn, nil
 }
 
-//Create agrega un nuevo paciente
+// Create agrega un nuevo paciente
 func (s *sqlStorePatient) Create(patient domain.Patient) error {
-	query := "INSERT INTO patients (last_name, name, adress, dni, admision_date) VALUES (?, ?, ?, ?, ?);"
+	query := "INSERT INTO patients (last_name, name, adress, dni, admission_date) VALUES (?, ?, ?, ?, ?);"
 	stmt, err := s.db.Prepare(query)
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	res, err := stmt.Exec(patient.Lastname, patient.Name, patient.Address, patient.DNI, patient.AdmissionDate)
 	if err != nil {
 		log.Fatal(err)
@@ -76,9 +75,9 @@ func (s *sqlStorePatient) Create(patient domain.Patient) error {
 	return nil
 }
 
-//Update actualiza un paciente
+// Update actualiza un paciente
 func (s *sqlStorePatient) Update(patient domain.Patient) error {
-	query := "UPDATE patient SET last_name = ?, name = ?, adress = ?, dni = ?, admission_date = ? WHERE id = ?;"
+	query := "UPDATE patients SET last_name = ?, name = ?, adress = ?, dni = ?, admission_date = ? WHERE id = ?;"
 	stmt, err := s.db.Prepare(query)
 	if err != nil {
 		return err
@@ -94,7 +93,7 @@ func (s *sqlStorePatient) Update(patient domain.Patient) error {
 	return nil
 }
 
-//Delete elimina un paciente
+// Delete elimina un paciente
 func (s *sqlStorePatient) Delete(id int) error {
 	query := "DELETE FROM patients WHERE id = ?;"
 	stmt, err := s.db.Prepare(query)
@@ -112,7 +111,7 @@ func (s *sqlStorePatient) Delete(id int) error {
 	return nil
 }
 
-//Exists verifica si un paciente existe
+// Exists verifica si un paciente existe
 func (s *sqlStorePatient) Exists(dni string) bool {
 	var exists bool
 	var id int

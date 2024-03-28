@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/domain"
-	"github.com/bootcamp-go/ExamenFinalBE3.git/pkg/store/patient"
+	store "github.com/bootcamp-go/ExamenFinalBE3.git/pkg/store/patient"
 )
 
 type Repository interface {
@@ -26,16 +26,15 @@ func NewRepository(storage store.StoreInterfacePatient) Repository {
 
 // Create a new patient
 func (r *repository) Create(p domain.Patient) (domain.Patient, error) {
-	if !r.storage.Exists(p.DNI) {
+	if r.storage.Exists(p.DNI) {
 		return domain.Patient{}, errors.New("patient already exists")
 	}
 	err := r.storage.Create(p)
 	if err != nil {
-		return	domain.Patient{}, errors.New("error creating patitent")
+		return domain.Patient{}, errors.New("error creating patitent")
 	}
 	return p, nil
 }
-
 
 // GetAll devuelve todos los pacientes
 func (r *repository) GetAll() ([]domain.Patient, error) {
@@ -59,7 +58,7 @@ func (r *repository) GetByID(id int) (domain.Patient, error) {
 // Update patient
 func (r *repository) Update(id int, p domain.Patient) (domain.Patient, error) {
 
-	if !r.storage.Exists(p.DNI) {
+	if r.storage.Exists(p.DNI) {
 		return domain.Patient{}, errors.New("dni already exists")
 	}
 	err := r.storage.Update(p)

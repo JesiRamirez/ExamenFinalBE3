@@ -4,11 +4,12 @@ import (
 	"errors"
 
 	"github.com/bootcamp-go/ExamenFinalBE3.git/internal/domain"
+	"github.com/bootcamp-go/ExamenFinalBE3.git/pkg/store/dentistStore"
 )
 
 type Repository interface {
 	Create(p domain.Dentist) (domain.Dentist, error)
-	GetAll() []domain.Dentist
+	GetAll() ([]domain.Dentist, error)
 	GetByID(id int) (domain.Dentist, error)
 	Update(id int, p domain.Dentist) (domain.Dentist, error)
 	Patch(id int, p domain.Dentist) (domain.Dentist, error)
@@ -16,97 +17,71 @@ type Repository interface {
 }
 
 type repository struct {
-	list []domain.Dentist
+	storageDentist dentistStore.StoreInterfaceDentist
 }
 
-func NewRepository(list []domain.Dentist) Repository {
-	return &repository{list}
+func NewRepository(storageDentist dentistStore.StoreInterfaceDentist) Repository {
+	return &repository{storageDentist}
 }
 
 // Create a new dentist
 func (r *repository) Create(p domain.Dentist) (domain.Dentist, error) {
-	if !r.validateLicense(p.License) {
+	if r.storageDentist.Exists(p.License) {
 		return domain.Dentist{}, errors.New("dentist already exists")
 	}
-	p.Id = len(r.list) + 1
-	r.list = append(r.list, p)
+	err := r.storageDentist.Create(p)
+	if err != nil {
+		return domain.Dentist{}, errors.New("error creating dentist")
+	}
 	return p, nil
 }
 
-// Validate dentist does not exists
-func (r *repository) validateLicense(license string) bool {
-	for _, patient := range r.list {
-		if patient.License == license {
-			return false
-		}
-	}
-	return true
-}
-
 // GetAll dentists
-func (r *repository) GetAll() []domain.Dentist {
-	return r.list
+func (r *repository) GetAll() ([]domain.Dentist, error) {
+	dentists, err := r.storageDentist.GetAll()
+	if err != nil {
+		return nil, err
+	}
+	return dentists, nil
 }
 
 // Get dentist by ID
 func (r *repository) GetByID(id int) (domain.Dentist, error) {
-	for _, dentist := range r.list {
-		if dentist.Id == id {
-			return dentist, nil
-		}
+	dentist, err := r.storageDentist.Read(id)
+	if err != nil {
+		return domain.Dentist{}, errors.New("dentist not found")
 	}
-	return domain.Dentist{}, errors.New("dentist not found")
+	return dentist, nil
 
 }
 
-//Update Dentist
-func (r *repository) Update(id int, p domain.Dentist) (domain.Dentist, error){
-	if !r.validateLicense(p.License){
-		return domain.Dentist{}, errors.New("code value already exists")
+// Update Dentist
+func (r *repository) Update(id int, p domain.Dentist) (domain.Dentist, error) {
+	if r.storageDentist.Exists(p.License) {
+		return domain.Dentist{}, errors.New("license already exists")
 	}
-	update := false
-	for i, v := range r.list {
-		if v.Id == id {
-			p.Id = id
-			r.list[i] = p
-			update = true
-		}
-	}
-	if !update {
-		return domain.Dentist{}, errors.New("dentist not found")
+	err := r.storageDentist.Update(p)
+	if err != nil {
+		return domain.Dentist{}, errors.New("error updating dentist")
 	}
 	return p, nil
 }
 
-//Patch dentist
-func (r *repository) Patch(id int, p domain.Dentist) (domain.Dentist, error){
-	
-	update := false
-	for i, v := range r.list {
-		if v.Id == id {
-			p.Id = id
-			r.list[i] = p
-			update = true
-		}
-	}
-	if !update {
-		return domain.Dentist{}, errors.New("dentist not found")
+// Patch dentist
+func (r *repository) Patch(id int, p domain.Dentist) (domain.Dentist, error) {
+
+	err := r.storageDentist.Update(p)
+	if err != nil {
+		return domain.Dentist{}, errors.New("error updating dentist")
 	}
 	return p, nil
 }
 
-//Delete dentist
-func(r *repository) Delete(id int) error {
-	deleted := false
-	for i, v := range r.list {
-		if v.Id == id {
-			r.list = append(r.list[:i], r.list[i+1:]...)
-			deleted = true
-		}
+// Delete dentist
+func (r *repository) Delete(id int) error {
+	err := r.storageDentist.Delete(id)
+	if err != nil {
+		return err
 	}
-	if !deleted {
-		return errors.New("dentist not found")
-	}
-
 	return nil
 }

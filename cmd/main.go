@@ -18,10 +18,7 @@ import (
 
 func main() {
 
-	//storage := store.NewJsonStore("./patients.json")
-	//storageDentist := store.NewJsonStoreDentist("./dentists.json")
-
-	bd, err := sql.Open("mysql", "root:@tcp(localhost:3307)/my_db")
+	bd, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/my_db")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -34,9 +31,6 @@ func main() {
 	storageDentist := dentistStore.NewSqlStoreDentist(bd)
 	storageAppointment := appointmentStore.NewSqlStoreAppointment(bd)
 
-	//var patientsList = []domain.Patient{}
-	//var dentistsList = []domain.Dentist{}
-	//var appointmentList = []domain.Appointment{}
 	var appointmentsDNILicenseList = []domain.AppointmentDNILicense{}
 
 	repo := patient.NewRepository(storage)

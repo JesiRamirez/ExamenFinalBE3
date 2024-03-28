@@ -1,4 +1,36 @@
 definitions:
+  domain.Appointment:
+    properties:
+      date:
+        type: string
+      dentist_id:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      pacient_id:
+        type: string
+    required:
+    - dentist_id
+    - id
+    - pacient_id
+    type: object
+  domain.Dentist:
+    properties:
+      id:
+        type: integer
+      last_name:
+        type: string
+      license:
+        type: string
+      name:
+        type: string
+    required:
+    - last_name
+    - license
+    - name
+    type: object
   domain.Patient:
     properties:
       admission_date:
@@ -42,6 +74,337 @@ info:
   title: Certified Tech Developer - Final Exam BackEnd III
   version: "1.0"
 paths:
+  /appointments:
+    get:
+      description: Gets all the appointments from the repository
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+      summary: Gets all the appointments
+      tags:
+      - appointments
+    post:
+      description: Create a new appointment in repository
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Appointment
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Appointment'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/web.response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.errorResponse'
+      summary: Create a new appointment
+      tags:
+      - appointments
+  /appointments/{id}:
+    delete:
+      description: Deletes a appointment from the repository
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/web.response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.errorResponse'
+      summary: Deletes a appointment
+      tags:
+      - appointments
+    get:
+      description: Gets a appointment by id from the repository
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.errorResponse'
+      summary: Gets a appointment by id
+      tags:
+      - appointments
+    patch:
+      description: Updates selected fields from a appointment from the repository
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Appointment
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Appointment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.errorResponse'
+      summary: Updates selected fields
+      tags:
+      - appointment
+    put:
+      description: Updates a appointment from the repository
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Appointment
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Patient'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.errorResponse'
+      summary: Updates a appointment
+      tags:
+      - appointments
+  /dentist:
+    post:
+      description: Create a new dentist in repository
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Dentist
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Dentist'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/web.response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.errorResponse'
+      summary: Create a new dentist
+      tags:
+      - dentists
+  /dentists:
+    get:
+      description: Gets all the dentists from the repository
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+      summary: Gets all the dentists
+      tags:
+      - dentists
+  /dentists/{id}:
+    delete:
+      description: Deletes a dentist from the repository
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/web.response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.errorResponse'
+      summary: Deletes a dentist
+      tags:
+      - dentists
+    get:
+      description: Gets a dentist by id from the repository
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.errorResponse'
+      summary: Gets a dentist by id
+      tags:
+      - dentists
+    patch:
+      description: Updates selected fields from a dentist from the repository
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Dentist
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Dentist'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.errorResponse'
+      summary: Updates selected fields
+      tags:
+      - dentists
+    put:
+      description: Updates a dentist from the repository
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Dentist
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Dentist'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.errorResponse'
+      summary: Updates a dentist
+      tags:
+      - dentists
   /patients:
     get:
       description: Gets all the patients from the repository

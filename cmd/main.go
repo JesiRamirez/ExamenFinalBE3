@@ -85,9 +85,12 @@ func main() {
 
 	appointments := r.Group("/appointments")
 	{
-		appointments.POST("", appointmentHandler.Post())
+		appointments.POST("", appointmentHandler.Post(), appointmentHandler.Post())
 		appointments.GET("", appointmentHandler.GetAll())
 		appointments.GET(":id", appointmentHandler.GetByID())
+		appointments.PUT(":id", appointmentHandler.Put())
+		appointments.PATCH(":id", appointmentHandler.Patch())
+		appointments.DELETE(":id", appointmentHandler.Delete())
 	}
 
 	appointmentsDNILicense := r.Group("/appointmentsDNI")
